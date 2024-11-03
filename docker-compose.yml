@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=database;Database=MyDatabase;User=sa;Password=Your_password123;
+    networks:
+      - api-teste-bd
+    depends_on:
+      - database
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Your_password123 # Altere para uma senha segura
+      - MSSQL_DATABASE=MyDatabase
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+    networks:
+      - api-teste-bd
+
+  tests:
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=database;Port=5432;Username=postgres;Password=admin;Database=mydb
+    networks:
+      - api-teste-bd
+    depends_on:
+      - database
+    command: [ "dotnet", "test", "tests/Tests.csproj", "--logger:trx" ]
+
+networks:
+  api-teste-bd:
+    driver: bridge
+
+volumes:
+  sqlserverdata:
+    driver: local

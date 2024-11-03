@@ -8,10 +8,7 @@ public class DBContexto : DbContext
 {
 
     private readonly IConfiguration _configuracaoAppSettings;
-    public DBContexto(IConfiguration _configuracaoAppSettings)
-    {
-        _configuracaoAppSettings = _configuracaoAppSettings;
-    }
+
     public DbSet<Administrador> administradores { get; set; }
     public DbSet<Veiculo> Veiculos { get; set; }
 

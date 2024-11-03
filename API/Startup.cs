@@ -47,24 +47,30 @@ namespace minimal_api
             {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Name = "Autorization",
-                    Type = SecuritySchemeType,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
                     Scheme = "bearer",
                     BearerFormat = "JWT",
-                    In = ParameterLocation,
-                    Description = "Insira o token JWT desta maneira: {seu token}"
+                    In = ParameterLocation.Header,
+                    Description = "Insira o token JWT desta maneira: Bearer {seu token}"
                 });
 
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement{
-              new OpenApiSecurityScheme{
-            Reference = new OpenApiReference{
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-            }
-        },
-        new string[] {}
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
                 });
             });
+
 
             var key = Configuration.GetSection("Jwt").ToString();
             if (string.IsNullOrEmpty(key)) key = "123456";
@@ -113,8 +119,6 @@ namespace minimal_api
                 #endregion
 
                 #region Administrador
-                // Administrador
-
                 string GerarTokenJwt(Administrador administrador)
                 {
                     if (string.IsNullOrEmpty(key)) return string.Empty;
@@ -223,7 +227,6 @@ namespace minimal_api
                 #endregion Administrador
 
                 #region Veiculos
-                // Veiculos
                 ErrosDeValidacao validaDTO(VeiculoDTO veiculoDTO)
                 {
                     var validacao = new ErrosDeValidacao
@@ -321,6 +324,7 @@ namespace minimal_api
                 .RequireAuthorization()
                 .RequireAuthorization(new AuthorizeAttribute { Roles = "Adm" })
                 .WithTags("Veiculos");
+                #endregion
             });
         }
     }

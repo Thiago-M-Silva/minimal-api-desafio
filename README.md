@@ -13,3 +13,4 @@
 - Consultar o código de testes para realizar os mocks (Testes/Helpers/Setup.cs)
 - teste de integracao com bd (Testes/Domain/AdministradorTeste.cs)
 - deploy no ec2 da aws
+- Baixar o sdk no linux e cooorrigir os erros (tem mt trem)
